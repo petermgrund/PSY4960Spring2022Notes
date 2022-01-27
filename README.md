@@ -1,3 +1,5 @@
 # PSY4960Spring2022Notes
 
-These are the notes that we'll be using for the Spring 2022 semester. Before classes, they will be posted as "shells" with the descriptions and text included. After class, they will be updated with the code we use in class. 
+I learned that through github you can edit code safely without accidentally deleting your main code, meaning you can more confidently experiment and say organized with your revisions.
+
+The process for how to do the above is a little unclear to me but I am confident I will get the hang of it as we do more.
