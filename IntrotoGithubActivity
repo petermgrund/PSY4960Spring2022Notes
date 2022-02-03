@@ -1,6 +1,10 @@
 
 What did you learn about GitHub? 
 
+*I learned the distinction between GitHub and Git. Git is essentially a version control aparatus that stays on your local machine. GitHub is a cloud-based software
+where people are able to collaborate with one another on coding projects. You can also install GitHub on your computer so you can push updates out to everyone 
+else working on your project.
+
 * It's great for collaboartion
 
 * It's an open source and well developed platform for developer and people to learn
@@ -17,6 +21,11 @@ What did you learn about GitHub?
 
 What's not clear? 
 
+* Some of the vocabulary I still need to review. For example, at the top of this file it says "You’re making changes in a project you don’t have write access to. 
+
+* Submitting a change will write it to a new branch in your fork petermgrund/PSY4960Spring2022Notes, so you can send a pull request." My current understanding is that
+when I forked this repo, it made a branch that I can edit independently. But since I forked it to my own repo, can I then send a pull request to your original
+repo?
 * pull request was hard at first 
 
 * I am still a bit unsure of how to make sure I am making edits that aren't editing the main/original document that somebody else created? 
@@ -36,3 +45,4 @@ PSY4960Spring2022Notes repository that everybody sees. Should I have made a new 
 * barely anything
 
 * Each name in the GitHub is not familar and I need time to remember it's function 
+
