@@ -1,4 +1,69 @@
-What did you learn about GitHub? 
-I know that the GitHub is like a cloud-database that can let people share data easily. I learned how to create an issue channel, how to create my own branch, and how to commit a change.
+
+What did you learn about GitHub?
+
+*I know that the GitHub is like a cloud-database that can let people share data easily. I learned how to create an issue channel, how to create my own branch, and how to commit a change.
+
+* Github let us share our repositories with others. Also, we can collaborate on one projects with other team workers and facilitate the open source projects.
+
+* How to create a pull request
+
+* I learned that through github you can edit code safely without accidentally deleting your main code, meaning you can more confidently experiment and say organized with your revisions.
+
+* learned that you can look at other people's profiles and activity, and that you can copy their repositories into yuor own by "forking" it. I also learned how to create a new branch. 
+
+
+*I learned the distinction between GitHub and Git. Git is essentially a version control aparatus that stays on your local machine. GitHub is a cloud-based software
+where people are able to collaborate with one another on coding projects. You can also install GitHub on your computer so you can push updates out to everyone 
+else working on your project.
+
+* It's great for collaboartion
+
+* It's an open source and well developed platform for developer and people to learn
+
+* I leaned that Github is a place people share their idea and work through code and viewers can commend their work to make the original work better.
+
+* I learned that GitHub is a Version Control System.  More specifically, I learned that a version control system allows users to continuously edit files without constantly copying them over and creating new files, while still maintaining access to view all of this history.
+
+* Most things make sense conceptually, so I feel that with practice I will understand everything better. 
+
+* One thing I learned about in the GitHub introductory course was that it's a streamlined program to collectively work on group projects. It is also a source that provides open research to other git hub users if the files are made public.
+
+* I learned  so much
+
 What's not clear? 
-It is my frist time using GitHub. It is like the first time I was using R. Numerous buttons totally scary me. I think hopefully I will gradually figure them out.
+
+*It is my frist time using GitHub. It is like the first time I was using R. Numerous buttons totally scary me. I think hopefully I will gradually figure them out.
+
+*I am wondering whether everything we put on the github can be seen by others. Sometimes we may put something we do not want to share, can these stuffs been hidden?
+
+*Honestly GitHub as a whole is very confusing. I cannot intuitively navigate the interface.
+
+*I am still unsure about pull requests and what they do. I'm not sure if I am doing this correctly. 
+
+*The process for how to do the above is a little unclear to me but I am confident I will get the hang of it as we do more.
+
+* Some of the vocabulary I still need to review. For example, at the top of this file it says "You’re making changes in a project you don’t have write access to. 
+
+* Submitting a change will write it to a new branch in your fork petermgrund/PSY4960Spring2022Notes, so you can send a pull request." My current understanding is that
+when I forked this repo, it made a branch that I can edit independently. But since I forked it to my own repo, can I then send a pull request to your original
+repo?
+* pull request was hard at first 
+
+* I am still a bit unsure of how to make sure I am making edits that aren't editing the main/original document that somebody else created? 
+For example, I really don't know if this is going to just stay in my ggrimsrud/PSY4960Spring2022Notes repository or if it is going directly to the
+PSY4960Spring2022Notes repository that everybody sees. Should I have made a new branch to edit this? I really don't know. 
+
+* I am not sure I am correctly creating a new pull since each time I clicked on it, the page seems different. And almost all the time I clicked on the button "new pull request", it said "nothing to compare"/
+
+* I'm not the quickest learner when it comes to technology, I don't really have comp sci experience. I thought it was kind of tough to navigate the site. I am still having a bit of trouble creating pull requests as well.
+
+* I learned how to navigate the basics of the site, though, I am still somewhat confused by everything. I mainly just need practice. 
+
+* The part that is unclear is if there are certain rules of etiquette when collaborating with others. 
+
+*I’m a little confused about the history saved on Github.  If one were to commit changes and then want to go back, would they be able to recommit those changes if they changed their mind?  Or would you have to be 100% sure everytime you go back on a commit.
+
+* barely anything
+
+* Each name in the GitHub is not familar and I need time to remember it's function 
+
