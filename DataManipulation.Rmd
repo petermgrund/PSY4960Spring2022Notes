@@ -22,10 +22,12 @@ You'll want to press the "import dataset" button above your global environment. 
 Once you press okay, you'll see your dataset pop up in the console below. You should move it to your .Rmd file and name it however you'd like. I have a tendency to use "dat", though it's not the most informative. Feel free to use your own name, but remember that whatever you call it here is how you'll refer to it for the rest of the lesson. 
 
 ```{r}
+getwd()
+setwd()
 dat<- read.csv("~/Desktop/old classes/PSYC259/PSY4960-AggressionSampleData.csv")
 ```
 
-###Learning Outcome #1: Transform wide data to long
+### Learning Outcome #1: Transform wide data to long
 There are many **many** ways to transform data from wide to long and vice versa. Sometimes, the version you pick is based on what other data you have. 
 
 We also need to determine what type of data we have. To make sure we're all on the same page, a quick review: 
@@ -34,30 +36,35 @@ We also need to determine what type of data we have. To make sure we're all on t
 
 Knowing the type of data you are using and how to change it is important because you may need to change it depending on the analyses you'd like to run and how you'd like to graph the data.  
 
-####Wide to Long
+#### Wide to Long
 As mentioned above, the current data are in wide format. We can change this to long format a couple of ways. We're only going to go through the three that I see most often. As a warning, I'm starting with the easiest, and working my way down to the least intuitive. 
 
 **pivot_longer**
 I think this is the easiest version to use. We'll need to use the "tidyr" library. 
 ```{r}
 library(tidyr)
+library(tidyverse)
 ```
 pivot_longer() uses the following structure: 
 pivot_longer(dataframe, columns containing wide data, names_to, values_to)
 names_to: specifies what you'd like to call the column that contains the previous column names
 values_to: specifies the name of the column where the scores go
 ```{r}
-
+colnames(dat)
+datLong<- pivot_longer(dat, cols= c("baselineAggression", "postAggression"), names_to="timePoint", values_to="aggressionScore")
 ```
 **Note:** remember to save the data to your environment. 
 
-####Learning Outcome 1 Practice
+#### Learning Outcome 1 Practice
 1. Open the relig_income dataset.
 ```{r}
+data(relig_income)
 ```
 
 2. Restructure the dataset so that it is in long format. 
 ```{r}
+colnames(relig_income)
+religLong<- pivot_longer(relig_income, cols= c(colnames(relig_income)[2:11]), names_to= "income", values_to= "frequency")
 ```
 
 **gather** 
@@ -65,54 +72,71 @@ gather() is another function in tidyr that can be used to.
 gather has the following arguments gather(dataframe, key, value, columns to act on)
 key- what you'd like the column containing old column names to be called
 value- what you'd like the scores column to be called
+
 ```{r}
-#datLong2<-gather(dat, key= "timePoint", value = "scores", c("baselineAggression", "postAggression"))
+datLong2<- gather(dat, key= "timePoint", value= "aggressionScore", c("baselineAggression", "postAggression"))
+
 ```
 
 **melt**
 melt is a function in the reshape2 library. It's another way to create long data
 ```{r}
-
+library(reshape2)
 ```
 melt() uses the following arguments: 
 melt(dataframe, id.vars, measure.vars, variable.name, value.name)
 ```{r}
-
+colnames(dat)
+datLong3<-melt(dat, id.vars= c("subjNo", "ageGroup","parentReportGender", "condition"),variable.name="timePoint", value.names="aggressionScore")
 ```
 
-###Learning Outcome 2: Transform data from long to wide
+### Learning Outcome 2: Transform data from long to wide
 As above, we'll restructure the data in three ways. Again, some ways are more intuitive than others, and you just need to know how to use one (but it's good to be familiar with multiples). 
 
 **pivot_wider**
 The pair function for pivot_longer. It has the following arguments: 
 pivot_wider(dataset, id columns, names_from, values_from)
 ```{r}
+datWide<- pivot_wider(datLong, id_cols = c("subjNo", "ageGroup", "parentReportGender", "condition"), names_from= "timePoint", values_from="aggressionScore")
 ```
 
 **spread** 
 is the pair function for gather. It has the following arguments: 
 gather(data, key, value, columns to make wide)
 ```{r}
-'datWide2<-spread(datLong2, key="timePoint", value="agressionScore")'
+datWide2<-spread(datLong2, key="timePoint", value="aggressionScore")
 ```
 
 **dcast**
 cast functions are the pairs to melt. dcast specifically is used for dataframes. 
 dcast has the following arguments: 
 dcast(data, formula)
-
 ```{r}
-'datWide3<- dcast(datLong3, formula= subjNo+ ageGroup+parentReportGender+condition~timePoint)'
+datWide3<- dcast(datLong3, formula= subjNo+ ageGroup+parentReportGender+condition~timePoint)
 ```
 **Note:** dcast is really not intuitive. I pretty much determine the correct order through trial and error every time. 
 
-####Learning Outcome 2: Practice
+#### Learning Outcome 2: Practice
 1. Open the ChickWeight dataset.
+```{r}
+data(ChickWeight)
+```
+
 2. Convert it from long to wide format. 
+```{r}
+colnames(ChickWeight)
+chickWide<- pivot_wider(ChickWeight, id_cols = c("Chick", "Diet"), names_from = "Time", values_from= "weight")
+chickLongD<- pivot_wider(ChickWeight, id_cols= c("Chick"),names_from= c("Diet","Time"), values_from="weight" )
+```
+
 3. Convert from wide to long. 
+```{r}
+colnames(chickLong)
+chickLong<- pivot_longer(chickWide, cols=c(colnames(chickWide)[3:14]), names_to = "Time", values_to="Weight")
+```
 
 
-###A note on pipes for data restructuring
+### A note on pipes for data restructuring
 A lot of the functions we've covered above can also be used with pipes. Here, we'll go through some ways that you can use pipes to restructure your data. 
 
 First, remember that pipes are used in the following way 
