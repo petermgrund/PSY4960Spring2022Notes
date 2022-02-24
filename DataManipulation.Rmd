@@ -146,70 +146,127 @@ dataframe %>% function(function arguments)
 you can use some of the commands we've already used in a different structure
 **pivot_longer w/pipes**
 data %>% pivot_longer(columns used, name for "name" column, name for "value column")
+
+```{r}
+#pivot_longer(data, cols= c(x,y), names_to= "stuff", values_to="stuff")
+data %>% filter(x, y)
+subset(data %>% filter(stuff))
+```
+
+
+```{r sampleDataclean}
+dat<- read.csv("~/Desktop/old classes/PSYC259/PSY4960-AggressionSampleData.csv")
+library(tidyverse)
+#dat<- pivot_longer(dat, cols= c("baselineAggression", "postAggression"), names_to="timePoint", values_to="score")
+#four<- dat %>% filter(ageGroup==4)
+```
+
 ```{r}
 colnames(dat)
 #pipes<-dat %>% pivot_longer(c("baselineAggression", "postAggression"), names_to="timepoint", values_to= "aggressionscore")
+
+pipeDat<- dat %>% pivot_longer(cols=c("baselineAggression", "postAggression"), names_to= "timePoint", values_to="aggressionScore")
 ```
 
-###Learning Outcome 3: Join data sets in R
+```{r}
+pipeFour<- dat %>%  pivot_longer(cols=c("baselineAggression", "postAggression"), names_to= "timePoint", values_to="aggressionScore") %>% filter(ageGroup==4)
+```
+
+
+###Practice: 
+
+1) open chick weight data set
+```{r}
+data("ChickWeight")
+```
+
+2) identify the type of data
+long data format
+
+3) change it to the other type
+- going to wide
+```{r}
+chickWide<-pivot_wider(ChickWeight,id_cols = c("Chick", "Diet"), names_from = "Time", values_from= "weight" ) 
+
+ChickWeight %>% pivot_wider(id_cols= c("Chick", "Diet"), names_from="Time", values_from="weight")
+```
+4) take all data from chick 3 and put it in wide format 
+```{r}
+subset(chickWide, chickWide$Chick==3)
+"OR"
+ChickWeight %>% pivot_wider(id_cols= c("Chick", "Diet"), names_from="Time", values_from="weight") %>% filter(Chick==3)
+"OR"
+chickWide<-pivot_wider(ChickWeight,id_cols = c("Chick", "Diet"), names_from = "Time", values_from= "weight" ) %>% filter(Chick==3)
+```
+
+
+### Learning Outcome 3: Join data sets in R
 Some times, we have datasets that we need to join or merge (e.g. participant demographics in one file and responses in a second). We can combine these datasets using "join." If you've ever used/heard of SQL, join works the same way in R
 
 We'll practice on the following code: 
 ```{r}
 subjNo<-dat$subjNo
-ageGroup<- c(rep(3,12), rep(4,12), rep(5,12), rep(6,12))
+#ageGroup<- c(rep(3,12), rep(4,12), rep(5,12), rep(6,12))
+ageGroup<- dat$ageGroup
+#rnorm(1)
 set.seed(13)
 anxietyScore<- sample(1:20, 48, replace=TRUE)
 datAnxiety<- cbind.data.frame(subjNo, ageGroup, anxietyScore)
-library(dplyr)
 dat$subjNo<- as.factor(dat$subjNo)
 datAnxiety$subjNo<- as.factor(dat$subjNo)
 
-datFinal<-left_join(dat, datAnxiety, by="subjNo")
+datFinal<-left_join(dat, datAnxiety, by=c("subjNo", "ageGroup"))
 ```
 right_join does the same thing, but places the new column to the right. 
 
-####Learning Outcome 3 Practice
+#### Learning Outcome 3 Practice
 1. Create a dataframe (n=48) that includes subject numbers and executive function scores (ranging from 0-16).
 ```{r}
+subjNo<- dat$subjNo
+EF<- sample(0:16, 48, replace=TRUE)
+EFDat<-cbind.data.frame(subjNo, EF)
 ```
 
 2. Join your dataset in #1 to the original Aggression dataset. 
 ```{r}
+left_join(dat, EFDat, by="subjNo")
 ```
 
-###Learning Outcomes 4 & 5: Use functions to clean data (and pipes)
+### Learning Outcomes 4 & 5: Use functions to clean data (and pipes)
 Now that we've covered how to restructure data, we'll talk about ways to clean it. These are just some of the functions I find myself using, and there are certainly more. This section is a bit longer, so there will be practice questions mixed in. 
 
 **Changing levels** 
 As we talked about before, there are different classes(or types) of data in R. For factors, you can change the specific levels (or categories) within the factor. 
 
 *using levels()*
-Let's take the example from our final dataset (datFinal). We can change parentReportGender to have levels of "male" and "female."
+Let's take the example from our final dataset (datFinal). We can change parentReportGender to have levels of "boy" and "girl."
 we'll check what class it is first
 ```{r}
-
+class(dat$parentReportGender)
+dat$parentReportGender<- as.factor(dat$parentReportGender)
+levels(dat$parentReportGender)<- c("girl", "boy")
+dat$prGender<- as.factor(dat$parentReportGender)
 ```
 it's currently a character, so we can change it to a factor using as.factor (which we talked about last week). Then, we can use the function levels() to change the data. 
-```{r}
-```
 
 Note: because I saved these as different columns, I can directly compare the data held in each to ensure I've changed everything correctly. 
 
 Also, keep in mind that changing levels of a factor requires you to know **know what levels are currently in your data.** You can check this by either printing the column as I've done above, or using the levels command:
 factor(data, levels = x,y,z)
 ```{r}
-
+factor(dat$ageGroup, levels=c(3,4,5,6))
 ```
 I'd recommend this version, particularly if you have a large data set. 
 
 ####Practice: 
 1. Create a column in the final dataset that contains condition as a factor. 
 ```{r}
+
 ```
 
 2. Change the levels to "e" for exclusion and "i" for inclusion. 
 ```{r}
+
 ```
 
 3. Check that you have done this successfully. 
@@ -221,6 +278,8 @@ You may have noticed that writes levels of a factor in alphabetical order. Somet
 It has the general structure relevel(column, reference level)
 ```{r}
 #dat$parentReportGender<- relevel(dat$parentReportGender, ref = "Male")
+dat$parentReportGender<- relevel(dat$parentReportGender, ref= "boy")
+levels(dat$parentReportGender)
 ```
 If you have more levels, you can specify the order in your factor function 
 
