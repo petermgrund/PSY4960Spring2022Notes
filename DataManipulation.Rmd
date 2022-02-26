@@ -24,7 +24,7 @@ Once you press okay, you'll see your dataset pop up in the console below. You sh
 ```{r}
 getwd()
 setwd()
-dat<- read.csv("~/Desktop/old classes/PSYC259/PSY4960-AggressionSampleData.csv")
+dat<- read.csv("PSY4960-AggressionSampleData.csv")
 ```
 
 ### Learning Outcome #1: Transform wide data to long
