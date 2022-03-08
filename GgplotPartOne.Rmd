@@ -21,7 +21,9 @@ We've already talked about how to transform data into wide and long format. For 
 **summarySE**
 To do this, we're going to use a function called summarySE. It's in the Rmisc package
 ```{r}
-
+#install.packages("Rmisc")
+library(Rmisc)
+library(ggplot2)
 ```
 
 We'll try this with the diamonds dataset (located in ggplot). Specifically, we'll create a summary of price by color. 
@@ -32,13 +34,15 @@ The structure for summarySE is:
 
 summarySE(data, measurevar(the variable you want to summarize), grouping variables, confidence interval)
 ```{r}
-
+data(diamonds)
+graphDiamonds<-summarySE(diamonds, measurevar= "price", groupvars = "color", conf.interval = .95)
 ```
 
 ### Learning Outcome 1: Practice 
 1. Open the mtcars dataset. Create a dataset containing a summary of the mpg by cylinder (cyl).
 ```{r}
-
+mtcarsDatGraph<-summarySE(mtcars, measurevar= "mpg", groupvars="cyl")
+mtcarsDatGraph
 ```
 
 ### General Graphing Notes:
@@ -66,10 +70,10 @@ ggplot(data, aes(x,y))
 
 In our case, we'll use the diamonds dataset again and see what happens when we include an x variable. 
 ```{r}
-
+ggplot(diamonds, aes(carat))
 ```
 
-You'll notice that now we have an x axis, labeled price with values on it. 
+You'll notice that now we have an x axis, labeled carat with values on it. 
 
 This ggplot() section is the base of our graph. We add additional parts using a + sign. 
 
@@ -77,13 +81,13 @@ This ggplot() section is the base of our graph. We add additional parts using a 
 We'll start with histograms because we only need one variable to make one. To do this, we can add +geom_histogram() to our code above. 
 
 ```{r}
-
+ggplot(diamonds, aes(carat))+ geom_histogram()
 ```
 
 **Changing the background**
 I really don't like the gray background (personal preference). So the first customization we'll do is remove the background using a themes argument.
 ```{r}
-
+ggplot(diamonds, aes(carat))+ geom_histogram()+ theme_classic()
 ```
 It can be used with any graph. 
 
@@ -92,30 +96,47 @@ There are two additional arguments we can use to change the colors; color and fi
 
 Note: color and fill go in the histogram layer
 ```{r}
-
+ggplot(diamonds, aes(carat)) + geom_histogram(color="seagreen", fill="blue")+theme_classic() #correct
+ggplot(diamonds, aes(carat,color="seagreen", fill="blue")) + geom_histogram()+theme_classic() 
+#incorrect 
+ggplot(diamonds, aes(carat)) +geom_histogram(color="#FF6633", fill="#66CCFF")+theme_classic()
 ```
 **Note**You can also put the color and fill arguments in the aes() section. As your graphs get more complicated, you will notice that placement matters and will result in slightly different graphs. We're not going to go that far today though.
 
 **Just because you can use a color scheme, doesn't mean you should** 
 
-####Histogram Practice: 
-1. Create a histogram of the carat variable. 
+#### Histogram Practice: 
+1. Create a histogram of the price variable. 
 ```{r}
-
+ggplot(diamonds, aes(price)) +geom_histogram()
 ```
 2. Include a theme to change the appearance of your graph.
 ```{r}
-
+ggplot(diamonds, aes(price)) +geom_histogram() +theme_minimal()
+ggplot(diamonds, aes(price)) +geom_histogram() +theme_test()
+ggplot(diamonds, aes(price)) +geom_histogram() +theme_dark()
+ggplot(diamonds, aes(price)) +geom_histogram() +theme_light()
+ggplot(diamonds, aes(price)) +geom_histogram() +theme_grey()
 ```
 
 3. Create a histogram with orange bars and purple lines. 
 ```{r}
-
+ggplot(diamonds, aes(price))+ geom_histogram(color="purple", fill="orange")+ theme_linedraw()
 ```
 
 4. **Bonus** Create a histogram with the worst color combination you can think of. 
 ```{r}
+ggplot(diamonds, aes(price))+ geom_histogram(color="red", fill="green")+ theme_update()
+ggplot(diamonds, aes(price))+ geom_histogram(color="green", fill="purple")+ theme_update()
+ggplot(diamonds, aes(price))+ geom_histogram(color="brown", fill="darkgreen")+ theme_update()
+ggplot(diamonds, aes(price))+ geom_histogram(color="red", fill="orange")+ theme_update()
+ggplot(diamonds, aes(price))+ geom_histogram(color="skyblue1", fill="skyblue2")+ theme_update()
+```
 
+Bindwidth
+```{r}
+ggplot(diamonds, aes(price))+ geom_histogram(color="blue", fill= "skyblue", bins=100)
+ggplot(diamonds, aes(price))+ geom_histogram(color="blue", fill= "skyblue", bins=50)
 ```
 
 **Bar graph** 
@@ -124,13 +145,13 @@ Next, we'll talk about how to make a bar graph. We can do this the same way we m
 We'll practice on the "clarity" column. (I'll use another theme so you can see the differences)
 
 ```{r}
-
+ggplot(diamonds, aes(clarity))+geom_bar()+theme_classic()
 ```
 
 **Changing the x and y label axes** 
 You'll notice that our y axis is "count" and our x axis is "clarity". These are not particularly informative. We can change these using xlab and ylab. 
 ```{r}
-
+ggplot(diamonds, aes(clarity))+geom_bar()+theme_classic()+ xlab(label= "Diamond's \n Clarity") + ylab(label= "Frequency")
 ```
 Note - \n- starts a new line 
 
@@ -138,13 +159,14 @@ Note - \n- starts a new line
 Sometimes, we don't just want the count of a category to make a bar graph. For instance, we may want to use a mean. We can do this by using the summary data frame we made before. 
 
 ```{r}
-
+graphDiamonds
+ggplot(graphDiamonds, aes(color, price))+ geom_bar(stat="identity")+theme_classic()
 ```
 
 **standard errors**
 Using this dataset also allows us to include standard error bars or confidence intervals in our plots. We do this by adding a layer called geom_errorbar(aes(ymin, ymax)). 
 ```{r}
-
+ggplot(graphDiamonds, aes(color, price))+ geom_bar(stat="identity")+theme_classic()+ geom_errorbar(aes(ymin= price-se, ymax= price+se))
 ```
 Things I included:
 - width: to get error bars to fit on top of bars
