@@ -133,25 +133,19 @@ ggplot(diamonds, aes(price))+ geom_histogram(color="red", fill="orange")+ theme_
 ggplot(diamonds, aes(price))+ geom_histogram(color="skyblue1", fill="skyblue2")+ theme_update()
 ```
 
-Bindwidth
-```{r}
-ggplot(diamonds, aes(price))+ geom_histogram(color="blue", fill= "skyblue", bins=100)
-ggplot(diamonds, aes(price))+ geom_histogram(color="blue", fill= "skyblue", bins=50)
-```
-
 **Bar graph** 
 Next, we'll talk about how to make a bar graph. We can do this the same way we make a histogram, but will use geom_bar(). 
 
 We'll practice on the "clarity" column. (I'll use another theme so you can see the differences)
 
 ```{r}
-ggplot(diamonds, aes(clarity))+geom_bar()+theme_classic()
+
 ```
 
 **Changing the x and y label axes** 
 You'll notice that our y axis is "count" and our x axis is "clarity". These are not particularly informative. We can change these using xlab and ylab. 
 ```{r}
-ggplot(diamonds, aes(clarity))+geom_bar()+theme_classic()+ xlab(label= "Diamond's \n Clarity") + ylab(label= "Frequency")
+
 ```
 Note - \n- starts a new line 
 
@@ -159,14 +153,13 @@ Note - \n- starts a new line
 Sometimes, we don't just want the count of a category to make a bar graph. For instance, we may want to use a mean. We can do this by using the summary data frame we made before. 
 
 ```{r}
-graphDiamonds
-ggplot(graphDiamonds, aes(color, price))+ geom_bar(stat="identity")+theme_classic()
+
 ```
 
 **standard errors**
 Using this dataset also allows us to include standard error bars or confidence intervals in our plots. We do this by adding a layer called geom_errorbar(aes(ymin, ymax)). 
 ```{r}
-ggplot(graphDiamonds, aes(color, price))+ geom_bar(stat="identity")+theme_classic()+ geom_errorbar(aes(ymin= price-se, ymax= price+se))
+
 ```
 Things I included:
 - width: to get error bars to fit on top of bars
