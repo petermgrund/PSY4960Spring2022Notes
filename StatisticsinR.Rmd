@@ -20,7 +20,20 @@ We'll simulate data to use throughout today's class:
 To do this, we'll use a couple of functions we've used before: (set.seed, rep, and sample)
 
 ```{r}
-#simulate data here
+set.seed(13)
+participants <- 1:6000
+openness <- sample(1:100, length(participants), replace = TRUE)
+agreeableness <- sample(1:100, length(participants), replace = TRUE)
+neuroticism <- sample(1:100, length(participants), replace = TRUE)
+conscientiousness <- sample(1:100, length(participants), replace = TRUE)
+extraversion <- sample(1:100, length(participants), replace = TRUE)#sample 1 to 100 6000 times
+#sample 1 to 100 6000 times
+
+personality_data <- cbind.data.frame(participants, openness, agreeableness, 
+                                     neuroticism, conscientiousness, extraversion)
+
+personality_data$participants <- as.factor(personality_data$participants)
+
 ```
 
 ### Learning Outcome 1: Obtaining descriptive statistics in R
@@ -29,44 +42,57 @@ We've gone through some of these already, but I want to make sure we're on the s
 #### Central Tendency
 **mean** 
 ```{r}
-
+mean(personality_data$openness)
 ```
 **median**
 ```{r}
+median(personality_data$openness)
 
 ```
 **mode**
 ```{r}
+mode(personality_data$openness)
+library(modeest)
+mfv(personality_data$openness)
 
+ggplot(personality_data, aes(openness)) + geom_histogram(bins = 100)
 ```
 
 #### Variability
 **range**
 ```{r}
-
+range(personality_data$openness)
 ```
 **interquartile range**
 ```{r}
-
+IQR(personality_data$openness)
+#difference b/w 25th and 75th percentile
 ```
 **standard deviation**
 ```{r}
-
+sd(personality_data$openness)
 ```
 **variance**
 ```{r}
-
+var(personality_data$openness)
 ```
 
 **summary**
 ```{r}
-
+summary(personality_data$openness)
 ```
 
 #### z score
 The other thing that we'll put in this section is how to create a z score in your data. This allows us to view one score relative to others, even if they are collected from different distributions
 
 ```{r}
+personality_data$open_z <- scale(personality_data$openness)
+personality_data$agree_z <- scale(personality_data$agreeableness)
+personality_data$consc_z <- scale(personality_data$conscientiousness)
+personality_data$extra_z <- scale(personality_data$extraversion)
+personality_data$neuro_z <- scale(personality_data$neuroticism)
+
+ggplot(personality_data, aes(open_z)) + geom_histogram(bins = 100)
 
 ```
 
