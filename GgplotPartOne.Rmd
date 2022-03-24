@@ -139,13 +139,13 @@ Next, we'll talk about how to make a bar graph. We can do this the same way we m
 We'll practice on the "clarity" column. (I'll use another theme so you can see the differences)
 
 ```{r}
-
+ggplot(diamonds, aes(clarity))+ geom_bar()
 ```
 
 **Changing the x and y label axes** 
 You'll notice that our y axis is "count" and our x axis is "clarity". These are not particularly informative. We can change these using xlab and ylab. 
 ```{r}
-
+ggplot(diamonds, aes(clarity))+ geom_bar()+ xlab("Clarity of Diamond")+ylab("Frequency")
 ```
 Note - \n- starts a new line 
 
@@ -153,14 +153,21 @@ Note - \n- starts a new line
 Sometimes, we don't just want the count of a category to make a bar graph. For instance, we may want to use a mean. We can do this by using the summary data frame we made before. 
 
 ```{r}
-
+diamondsMean<-summarySE(diamonds, groupvars= "color", measurevar = "price")
+ggplot(diamondsMean, aes(color, price))+geom_bar(stat="identity")
 ```
 
 **standard errors**
 Using this dataset also allows us to include standard error bars or confidence intervals in our plots. We do this by adding a layer called geom_errorbar(aes(ymin, ymax)). 
 ```{r}
+ggplot(diamondsMean, aes(color, price))+geom_bar(stat="identity")+ geom_errorbar(aes(ymin= price-se , ymax=price+se))
+```
+
+```{r}
+ggplot(diamondsMean, aes(color, price))+geom_bar(stat="identity", alpha=.5)+ geom_errorbar(aes(ymin= price-se , ymax=price+se), size=1, width=.7)
 
 ```
+
 Things I included:
 - width: to get error bars to fit on top of bars
 - alpha: transparency of bars
@@ -169,7 +176,7 @@ Things I included:
 
 **adding lines** (hline/vline)
 ```{r}
-
+ggplot(diamondsMean, aes(color, price))+geom_bar(stat="identity", alpha=.5)+ geom_vline(xintercept = "D",size = 3, linetype="dashed", color="#3366FF")+ geom_hline(yintercept=2000, size=2, linetype="solid", color="skyblue")
 ```
 Things I changed: 
 - alpha: how transparent a layer is
@@ -182,33 +189,34 @@ Things I changed:
 ### Practice: 
 1. Create a bar graph for the cut column. 
 ```{r}
-
+ggplot(diamonds, aes(cut))+geom_bar()
 ```
 
 2. Change the x and y labels to something that is more informative. 
 ```{r}
-
+ggplot(diamonds, aes(cut))+geom_bar()+xlab("Cut of \n Diamond")+ ylab("frequency")
 ```
 
 ### Adding a third variable to a bar graph: 
 ```{r}
+ggplot(diamonds, aes(cut, fill=color))+geom_bar()+xlab("Cut of \n Diamond")+ ylab("frequency")
 ```
 
 **Scatter plot**
 We can make scatter plots using the argument geom_point(). We'll make a graph of carat by price. 
 ```{r}
-
+ggplot(diamonds, aes(carat, price))+geom_point()+ theme_classic()
 ```
 
 ### Practice
 - make a scatter plot of the x and y variables in the diamonds dataset. 
 ```{r}
-
+ggplot(diamonds, aes(x,y))+geom_point()+ theme_classic()
 ```
 
 - modify the graph to include at least 2of the style elements we talked about
 ```{r}
-
+ggplot(diamonds, aes(x,y))+geom_point(shape=13, color="hotpink")+ theme_classic()
 ```
 
 **Note:**In this case, geom_point() is the best option to make our scatter plot. If you work with small datasets, the points may be overlapping and make it look like you have less data. In these cases, you can use geom_jitter(), which will offset the dots slightly and allow you to see each participant.  
@@ -216,85 +224,101 @@ We can make scatter plots using the argument geom_point(). We'll make a graph of
 **Inserting a regression line**
 We can include a regression line into our graph using geom_smooth().
 ```{r}
-
+ggplot(diamonds, aes(carat, price))+ geom_point(shape= 13, color="skyblue") + theme_classic()+ geom_smooth(method= "lm") 
 ```
+
 
 We can customize whether the regression line has a confidence interval surrounding it. You may be asking yourself **what confidence interval**. Carat and price are very highly correlated. let's use an mtcars example to see how we can change it. 
+w/ 95% confidence interval shaded
 ```{r}
-
+data(mtcars)
+ggplot(mtcars, aes(cyl, mpg))+ geom_point(alpha= .8)+ geom_smooth(method="lm", se = FALSE, color= "gray78", size=2, linetype= "dashed" )
 ```
-
 **Changing scatterplots**
 you can change the outline of a dot using "color" 
 ```{r}
-
+ggplot(diamonds, aes(carat, price))+geom_point(color= "#336699")
 ```
 
-you can also change the shape and the size of the points by adding shape and size arguments to geom_point. 
+you can also change the shape and the size of the points by adding shape and size arguments dto geom_point. 
 ```{r}
+ggplot(diamonds, aes(carat, price))+geom_point(color= "#336699", size= 1, shape = 8)
 
 ```
 
 ####Practice: 
 1. Create a scatter plot of the table and carat variables. 
 ```{r}
-
+ggplot(diamonds, aes(table, carat))+ geom_point()
 ```
 2. Change the color of the points to your favorite color. 
 ```{r}
-
+ggplot(diamonds, aes(table, carat))+ geom_point(color="darkred")
 ```
 3. Change the shape of the points. 
 ```{r}
-
+ggplot(diamonds, aes(table, carat))+ geom_point(color="darkred", shape=8)
+ggplot(diamonds, aes(table, carat)) + geom_point(color = "skyblue", shape = 17)
 ```
 4. Add a line of best fit to your scatter plot. 
 ```{r}
+ggplot(diamonds, aes(table, carat))+geom_point(color= "hot pink", size= 1, shape= 8) + geom_smooth(method= "lm", se = FALSE, color= "purple", size= 1)
 
+ggplot(diamonds, aes(table, carat))+geom_point(color= "hot pink", size= 1, shape= 8) + geom_smooth(method= "lm", se = TRUE, color= "purple", size= 1)
 ```
 
 **Line graphs**
 Line graphs follow a similar to scatterplots, but use the geom_line function. Color customizations follow the same rules as scatterplots. 
 include group in aes
 ```{r}
-
+ggplot(diamonds, aes(carat, price))+ geom_line()
 ```
 I won't talk as much about these graphs, but happy to answer questions. 
 
 **Box plots**
 I hope that the pattern is starting to make sense, but the only difference with a box plot is that you'll use geom_boxplot(). 
 ```{r}
+ggplot(diamonds, aes(price))+ geom_boxplot()
+```
+```{r}
+ggplot(mtcars, aes(mpg))+geom_boxplot()
+```
 
+```{r}
+ggplot(diamonds, aes(color, price))+ geom_boxplot()
+ggplot(diamonds, aes(price, color))+geom_boxplot()
 ```
 
 ### Practice: 
 1. Create a boxplot for carat.
 ```{r}
-
+ggplot(diamonds, aes(carat))+ geom_boxplot()
 ```
 
 2. Create boxplots of carat for each level of cut.
 ```{r}
+ggplot(diamonds, aes(cut,carat))+ geom_boxplot()
 
 ```
 
 3. **Bonus** play around with fill and color. What changes about your boxplots? 
 ```{r}
+ggplot(diamonds, aes(cut,carat))+ geom_boxplot(color="darkblue" , fill= "pink" )
 
 ```
-
 
 ## Learning Outcome 4:Incorporate third variables into graphs
 There are many ways that we can include third variables. 
 
 For bar graphs: 
 ```{r}
-
+ggplot(diamonds, aes(color, fill=cut))+geom_bar(position=position_dodge(), color="darkblue")
 ```
 
 For scatter plots: 
 ```{r}
-
+ggplot(diamonds, aes(price, carat, color=cut))+geom_point()
+ggplot(diamonds, aes(price, carat, color=table))+geom_point()
 ```
 
 Rather than having all bars/dots/lines the same color, you can have them change by using various packages and by looking up a few color codes online. 
@@ -303,23 +327,23 @@ If you don't like the colors, we can specify specific ones using scale_fill_ dis
 (need to specify option for color scales)
 We'll walk through these together because I think it's helpful to see what color combinations exist and how you can use them in a bar graph or a scatter plot.
 ```{r}
-library(viridis)
+library(viridis) 
 library(RColorBrewer)
 ```
 scale_color_manual; 
 ```{r}
-
+ggplot(mtcars, aes(mpg, hp, color= as.factor(cyl)))+ geom_point()+ scale_color_manual(values= c("#5d43a6","#d27d76","#34bcf2" ))
 ```
 R ColorBrewer
 scale_color_brewer()
 ```{r}
-
+ggplot(mtcars, aes(mpg, hp, color= as.factor(cyl)))+ geom_point()+scale_color_brewer(palette= "Blues")
 ```
 
 Viridis
 scale_color_viridis()
 ```{r}
-
+ggplot(mtcars, aes(mpg, hp, color= as.factor(cyl)))+ geom_point()+scale_color_viridis(discrete = TRUE, option= "b")
 ```
 
 
@@ -329,21 +353,29 @@ I'll also show you how you can get color pallets online and find the associated 
 ### Learning Outcome 4 Practice. 
 1. Create a graph of cyl and mpg in the mtcars dataset. 
 ```{r}
-
+ggplot(mtcars, aes(mpg, fill= as.factor(cyl)))+ geom_histogram() + scale_fill_viridis(discrete=TRUE, option= "D")
+"OR"
+ggplot(mtcars, aes(cyl, fill=as.factor(mpg)))+geom_bar()+theme_classic()+ylab("")
+"OR"
+car<-summarySE(mtcars, measurevar= "mpg", groupvars= "cyl")
+ggplot(car, aes(cyl, mpg))+geom_bar(stat="identity")+theme_classic()
+"OR"
+ggplot(mtcars, aes(cyl, mpg))+ geom_point()
 ```
 
 2. In some way, include am as a third variable in this graph. 
 ```{r}
-
+ggplot(mtcars, aes(cyl, mpg, color=as.factor(am)))+ geom_point()
 ```
 
 3. Create a graph of mpg and hp. 
 ```{r}
-
+ggplot(mtcars, aes(hp, mpg))+geom_point()
 ```
-
 4. In some way, include gear as a third variable. 
 ```{r}
+ggplot(mtcars, aes(hp, mpg, color=as.factor(gear)))+geom_point()+ scale_color_brewer(palette = "Set2")
 
+ggplot(mtcars, aes(hp, mpg, color=as.factor(gear)))+geom_point()+ scale_color_manual(values= c('#edf8b1','#7fcdbb','#2c7fb8'))
 ```
 
