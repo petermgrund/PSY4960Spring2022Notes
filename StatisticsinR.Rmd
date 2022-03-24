@@ -20,7 +20,18 @@ We'll simulate data to use throughout today's class:
 To do this, we'll use a couple of functions we've used before: (set.seed, rep, and sample)
 
 ```{r}
-#simulate data here
+set.seed(13)
+participants<- 1:6000
+oppenness<- sample(1:100, length(participants),replace= TRUE)
+agreeableness<- sample(1:100, length(participants), replace=TRUE)
+neuroticism<- sample(1:100, length(participants), replace = TRUE)
+conscientiousness<- sample(1:100, length(participants), replace=TRUE)
+extraversion<- sample(1:100, length(participants), replace= TRUE)
+personalityDat<- cbind.data.frame(participants, oppenness, agreeableness, neuroticism, conscientiousness, extraversion)
+```
+
+```{r}
+personalityDat$participants<- as.factor(personalityDat$participants)
 ```
 
 ### Learning Outcome 1: Obtaining descriptive statistics in R
@@ -29,79 +40,122 @@ We've gone through some of these already, but I want to make sure we're on the s
 #### Central Tendency
 **mean** 
 ```{r}
-
+mean(personalityDat$oppenness)
 ```
 **median**
 ```{r}
-
+median(personalityDat$oppenness)
 ```
 **mode**
 ```{r}
+mode(personalityDat$oppenness) #gives structure of the data
+library(modeest)
+mfv(personalityDat$oppenness)
+```
 
+```{r}
+library(ggplot2)
+ggplot(personalityDat, aes(oppenness))+geom_histogram(bins=25)
 ```
 
 #### Variability
 **range**
 ```{r}
-
+range(personalityDat$oppenness)
+# range is 99
 ```
+
 **interquartile range**
 ```{r}
-
+IQR(personalityDat$oppenness)
+ggplot(personalityDat, aes(oppenness))+geom_boxplot()
 ```
 **standard deviation**
 ```{r}
-
+sd(personalityDat$oppenness)
 ```
 **variance**
 ```{r}
-
+var(personalityDat$oppenness)
+sd(personalityDat$oppenness)^2
 ```
 
 **summary**
 ```{r}
-
+summary(personalityDat$oppenness)
 ```
 
 #### z score
 The other thing that we'll put in this section is how to create a z score in your data. This allows us to view one score relative to others, even if they are collected from different distributions
 
 ```{r}
-
+personalityDat$opennessScale<-scale(personalityDat$oppenness)
+#check
+head(personalityDat$opennessScale)
+head(personalityDat)
+ggplot(personalityDat, aes(oppenness))+geom_histogram()
+ggplot(personalityDat, aes(opennessScale))+geom_histogram()
 ```
 
 ##### Learning Outcome 1 Practice
-1) calculate the mean, median, and mode for [xx] 
+1) calculate the mean, median, and mode for any data in the personality Dataset
 ```{r}
+mean(personalityDat$neuroticism)
+mean(personalityDat$agreeableness)
+mean(personalityDat$extraversion)
 
+median(personalityDat$neuroticism)
+median(personalityDat$agreeableness)
+median(personalityDat$extraversion)
+
+mfv(personalityDat$neuroticism)
+mfv(personalityDat$agreeableness)
+mfv(personalityDat$extraversion)
 ```
 2) what do you notice about these scores? (are they the same? different?)
 
-3) create z scores for [xx]. Interpret what participant 3's z score means. 
+3) create z scores for any data in the personality Dataset. Interpret what participant 3's z score means. 
 ```{r}
-
+personalityDat$agreeablenessScale<- scale(personalityDat$agreeableness)
+personalityDat$extraversionScale<- scale(personalityDat$extraversion)
+personalityDat$neuroticismScale<- scale(personalityDat$neuroticism)
 ```
 
 *Challenge* Graph your data and include the mean median and mode on the graph 
+```{r}
+ggplot(personalityDat, aes(agreeableness))+geom_histogram()+ geom_vline(xintercept= mean(personalityDat$agreeableness), size= 2, color= "green")+ geom_vline(xintercept= median(personalityDat$agreeableness), size=2, color="pink")+ geom_vline(xintercept = mfv(personalityDat$agreeableness)[1], size=2, color= "darkblue")+geom_vline(xintercept = mfv(personalityDat$agreeableness)[2], size=2, color= "#FF0000")+ theme_classic()
+```
 
 ### Learning Outcome 2: Conduct common parametric analyses in R
 
 Now that we have covered some descriptive statistics, we'll talk about parametric ones. Parametric statistics are those that rely on assumptions to make inferences from the sample to the population. We'll go through correlations, t-tests, regression, and ANOVA. We'll go through nonparametric tests, or those that rely on less assumptions, in the next section. 
 
 #### Pearson correlation
-We'll practice running correlations using the dataset above. To do this, we'll look at the correlation between Evaluations for includers and excluders in the dataset. 
+We'll practice running correlations using the dataset above. To do this, we'll look at the correlation between personality traits. 
 cor(x, y)
 ```{r}
-
+cor(personalityDat$conscientiousness, personalityDat$agreeableness)
 ```
 **Note:** It's great that we can see the correlation between these two measures, but we don't have any additional information, ie information related to significance.We can use another function, cor.test, to get information about significance.
 cor.test(x,y)
 ```{r}
-
+cor.test(personalityDat$conscientiousness, personalityDat$agreeableness)
 ```
 We can change whether we our conducting a one tailed or a two tailed test by including an additional argument "alternative." It defaults to a two tailed test, but we can specify a one tailed test in either direction (greater or less) 
 ```{r}
+cor.test(personalityDat$conscientiousness, personalityDat$agreeableness, alternative="greater")
 
+cor.test(personalityDat$conscientiousness, personalityDat$agreeableness, alternative="less")
+```
+
+### Extra Code about Correlation Tables 
+cor() can also be used to create correlation matrices, but need to create a dataframe that is just the variables you'd like to use. 
+cor(dat)
+we'll do a quick example w/ mt cars
+```{r}
+cor(personalityDat[,2:6])
+smallDat<-cbind.data.frame(personalityDat$agreeableness, personalityDat$oppenness, personalityDat$extraversion, personalityDat$neuroticism, personalityDat$conscientiousness)
+cor(smallDat)
 ```
 
 #### t-tests
@@ -111,7 +165,7 @@ We can run a variety of t-tests using the same function t.test().
 A one sample t test can be computed by specifying mu in the arguments. 
 t.test(variable, mu)
 ```{r}
-
+t.test(personalityDat$agreeableness, mu = 50)
 ```
 
 ##### two samples t-test
@@ -173,13 +227,6 @@ Differences between Greater and Less:
 
 ```
 
-### Extra Code about Correlation Tables 
-cor() can also be used to create correlation matrices, but need to create a dataframe that is just the variables you'd like to use. 
-cor(dat)
-we'll do a quick example w/ mt cars
-```{r}
-
-```
 
 #### regression
 Back to the simulated Dataset we made. The code for a linear regression is really similar (ie identical)  to what we used for t-tests.
@@ -298,9 +345,12 @@ This is a two-tailed test, but can also do one tailed by specifying the alternat
 ```
 
 
-####Learning Outcome 3 practice: 
+#### Learning Outcome 3 practice: 
 1. using the mtcars dataset, run a correlation to determine the relationship between engine shape (vs) and hp. What test did you run and why? 
 
+
+
 2. Run a wilcoxon sign rank test to determine if cylinder and gears have different means. 
+
 
 3. Run a binomial test to determine if the number of cars with manual transmission differs from chance. (hint: use the ? feature to learn more about the dataset.)
