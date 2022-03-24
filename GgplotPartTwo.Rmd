@@ -1,7 +1,7 @@
 ---
-title: "Advanced Graphing"
+title: "Ggplot part 2"
 author: "Amanda Mae Woodward"
-date: "2/28/2022"
+date: "3/17/2022"
 output: html_document
 ---
 
@@ -20,21 +20,21 @@ Let's try this on a graph from the diamonds dataset:
 Create a subset of the diamonds dataset:
 ```{r}
 library(ggplot2)
-
+data(diamonds)
 ```
 
 Create a graph including information about price and carat. Include cut in some way: 
 ```{r}
-
+ggplot(diamonds, aes(carat, price, color=as.factor(cut)))+ geom_point()+ theme_classic()+ scale_color_viridis(discrete= TRUE, option= "A")
 ```
 Notice what the legend looks like. To remove it we can add: 
 theme(legend.position="none")
 ```{r}
-
+ggplot(diamonds, aes(carat, price, color=as.factor(cut)))+ geom_point()+ theme_classic()+ scale_color_viridis(discrete= TRUE, option= "A")+ theme(legend.position= "none")
 ```
 We can also change the location: 
 ```{r}
-
+ggplot(diamonds, aes(carat, price, color=as.factor(cut)))+ geom_point()+ theme_classic()+ scale_color_viridis(discrete= TRUE, option= "A")+ theme(legend.position= "bottom")
 ```
 
 To Change the legend title, you can use a couple of different codes, depending on the type of data: 
@@ -43,35 +43,47 @@ scale_fill_discrete(name="Title) should work for a bar graph filled in by a fact
 scale_color_continuous() and scale_fill_continuous should work for a numeric fill
 ```{r}
 
-```
-
-```{r}
-
+ggplot(diamonds, aes(carat, price, color=as.factor(cut)))+ geom_point()+ theme_classic()+ scale_color_viridis(discrete= TRUE, option= "A",name= "Cut of Diamond")+ theme(legend.position= "bottom")
 ```
 
 ### Practice:
+
 1) make a graph of disp and hp from mtcars. Include miles per gallon as a third variable
+```{r}
+ggplot(mtcars, aes(disp, hp, color=as.factor(mpg)))+ geom_point()
+```
 
 2) Move the legend to the top of the graph
+```{r}
+ggplot(mtcars, aes(disp, hp, color=as.factor(mpg)))+ geom_point()+ theme_classic()+theme(legend.position="top")
+```
 
 3) Remove the legend from the graph 
+```{r}
+ggplot(mtcars, aes(disp, hp, color=as.factor(mpg)))+ geom_point()+ theme_classic()+theme(legend.position="none")
+```
 
 4) Change the title of the legend
+```{r}
+ggplot(mtcars, aes(disp, hp, color=as.factor(mpg)))+ geom_point()+ theme_classic()+theme(legend.position="top")+scale_color_viridis(discrete=TRUE, option="A", name ="Miles per Gallon")
+```
 
 ### Learning Outcome 2: Describe how to use facet wrap
 Facet Wrap allows us to incorporate a third variable in another way. Specifically, it panels graphs so that we can make an individual graph for each level of a factor.
 
 we need to make a graph and save it (we'll use carat and price)
 ```{r}
-
+graph<- ggplot(diamonds, aes(carat, price))+ geom_point()
+graph
 ```
 then we'll use cut to create the facets
 ```{r}
-
+graph+ facet_wrap(~cut)
 ```
 
 ```{r}
-
+ ggplot(diamonds, aes(carat, price))+ geom_point()+ facet_wrap(~cut)
+ggplot(mtcars, aes(mpg, hp, color=as.factor(cyl)))+ geom_point()+ facet_wrap(~gear)
 ```
 
 ### Practice: 
@@ -240,5 +252,4 @@ server <- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 ```
-
 
