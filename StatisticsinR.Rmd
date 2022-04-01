@@ -6,12 +6,12 @@ output: html_document
 ---
 
 # Learning Outcomes:
-By the end of today's class, students should be able to: 
+By the end of today's class, students should be able to:
 - obtain descriptive statistics in R
 - conduct common parametric analyses in R
 - conduct common nonparametric analyses in R
 
-**Disclaimer:** Covering every type of analysis in R could be an entire course by itself. Today, we'll cover **some** analyes you can do. If there are additional analyses you'd like to cover, please let me know and I'm happy to upload supplemental code or cover it in a later class (there is flexibility in the last couple of weeks!). 
+**Disclaimer:** Covering every type of analysis in R could be an entire course by itself. Today, we'll cover **some** analyes you can do. If there are additional analyses you'd like to cover, please let me know and I'm happy to upload supplemental code or cover it in a later class (there is flexibility in the last couple of weeks!).
 
 Additionally, we will **not** cover interpretations in depth in this class. The goal is to teach you how to use R to run the tests, and adding interpretations for each test could make this into several semester long courses. However, if you have questions about how to interpret statistics, please let me know and I can adjust our course material. I am happy to talk about interpretations in office hours, or you will learn about them in your statistics courses.
 
@@ -29,7 +29,7 @@ conscientiousness <- sample(1:100, length(participants), replace = TRUE)
 extraversion <- sample(1:100, length(participants), replace = TRUE)#sample 1 to 100 6000 times
 #sample 1 to 100 6000 times
 
-personality_data <- cbind.data.frame(participants, openness, agreeableness, 
+personality_data <- cbind.data.frame(participants, openness, agreeableness,
                                      neuroticism, conscientiousness, extraversion)
 
 personality_data$participants <- as.factor(personality_data$participants)
@@ -37,10 +37,10 @@ personality_data$participants <- as.factor(personality_data$participants)
 ```
 
 ### Learning Outcome 1: Obtaining descriptive statistics in R
-We've gone through some of these already, but I want to make sure we're on the same page. For descriptive statistics, we'll mostly focus on the measures of central tendency and measures of variability. 
+We've gone through some of these already, but I want to make sure we're on the same page. For descriptive statistics, we'll mostly focus on the measures of central tendency and measures of variability.
 
 #### Central Tendency
-**mean** 
+**mean**
 ```{r}
 mean(personality_data$openness)
 ```
@@ -63,6 +63,7 @@ ggplot(personality_data, aes(openness)) + geom_histogram(bins = 100)
 ```{r}
 range(personality_data$openness)
 ```
+
 **interquartile range**
 ```{r}
 IQR(personality_data$openness)
@@ -97,29 +98,45 @@ ggplot(personality_data, aes(open_z)) + geom_histogram(bins = 100)
 ```
 
 ##### Learning Outcome 1 Practice
-1) calculate the mean, median, and mode for [xx] 
+1) calculate the mean, median, and mode for any data in the personality Dataset
 ```{r}
-mean(personality_data$neuroticism)
+mean(personalityDat$neuroticism)
+mean(personalityDat$agreeableness)
+mean(personalityDat$extraversion)
+
+median(personalityDat$neuroticism)
+median(personalityDat$agreeableness)
+median(personalityDat$extraversion)
+
+mfv(personalityDat$neuroticism)
+mfv(personalityDat$agreeableness)
+mfv(personalityDat$extraversion)
 ```
 2) what do you notice about these scores? (are they the same? different?)
 
-3) create z scores for [xx]. Interpret what participant 3's z score means. 
+3) create z scores for any data in the personality Dataset. Interpret what participant 3's z score means.
 ```{r}
+personalityDat$agreeablenessScale<- scale(personalityDat$agreeableness)
+personalityDat$extraversionScale<- scale(personalityDat$extraversion)
+personalityDat$neuroticismScale<- scale(personalityDat$neuroticism)
 ```
 
-*Challenge* Graph your data and include the mean median and mode on the graph 
+*Challenge* Graph your data and include the mean median and mode on the graph
+```{r}
+ggplot(personalityDat, aes(agreeableness))+geom_histogram()+ geom_vline(xintercept= mean(personalityDat$agreeableness), size= 2, color= "green")+ geom_vline(xintercept= median(personalityDat$agreeableness), size=2, color="pink")+ geom_vline(xintercept = mfv(personalityDat$agreeableness)[1], size=2, color= "darkblue")+geom_vline(xintercept = mfv(personalityDat$agreeableness)[2], size=2, color= "#FF0000")+ theme_classic()
+```
 
 ```{r}
-ggplot(personality_data, aes(agreeableness)) + geom_histogram() + 
+ggplot(personality_data, aes(agreeableness)) + geom_histogram() +
 geom_vline(xintercept=mean(), size=2, color="color")
 ```
 
 ### Learning Outcome 2: Conduct common parametric analyses in R
 
-Now that we have covered some descriptive statistics, we'll talk about parametric ones. Parametric statistics are those that rely on assumptions to make inferences from the sample to the population. We'll go through correlations, t-tests, regression, and ANOVA. We'll go through nonparametric tests, or those that rely on less assumptions, in the next section. 
+Now that we have covered some descriptive statistics, we'll talk about parametric ones. Parametric statistics are those that rely on assumptions to make inferences from the sample to the population. We'll go through correlations, t-tests, regression, and ANOVA. We'll go through nonparametric tests, or those that rely on less assumptions, in the next section.
 
 #### Pearson correlation
-We'll practice running correlations using the dataset above. To do this, we'll look at the correlation between Evaluations for includers and excluders in the dataset. 
+We'll practice running correlations using the dataset above. To do this, we'll look at the correlation between personality traits.
 cor(x, y)
 ```{r}
 co <- personality_data$conscientiousness
@@ -132,144 +149,166 @@ cor.test(x,y)
 ```{r}
 cor.test(co, ag)
 ```
-We can change whether we our conducting a one tailed or a two tailed test by including an additional argument "alternative." It defaults to a two tailed test, but we can specify a one tailed test in either direction (greater or less) 
+We can change whether we our conducting a one tailed or a two tailed test by including an additional argument "alternative." It defaults to a two tailed test, but we can specify a one tailed test in either direction (greater or less)
 ```{r}
 cor.test(co, ag, alternative = "less") #is a negative corr significant
 cor.test(co, ag, alternative = "greater") #is a positive corr significant
 
 cor(personality_data[,2:6])
 
+cor.test(personalityDat$conscientiousness, personalityDat$agreeableness, alternative="less")
+```
+
+### Extra Code about Correlation Tables
+cor() can also be used to create correlation matrices, but need to create a dataframe that is just the variables you'd like to use.
+cor(dat)
+we'll do a quick example w/ mt cars
+```{r}
+cor(personalityDat[,2:6])
+smallDat<-cbind.data.frame(personalityDat$agreeableness, personalityDat$oppenness, personalityDat$extraversion, personalityDat$neuroticism, personalityDat$conscientiousness)
+cor(smallDat)
 ```
 
 #### t-tests
-We can run a variety of t-tests using the same function t.test(). 
+We can run a variety of t-tests using the same function t.test().
 
 ##### one sample t-test
-A one sample t test can be computed by specifying mu in the arguments. 
+A one sample t test can be computed by specifying mu in the arguments.
 t.test(variable, mu)
 ```{r}
 t.test(personality_data$agreeableness, mu = 50)
 ```
 
 ##### two samples t-test
-There are two ways we can use this function when we have two variables (independent or paired). The first is to type our x and y variables in as we did in the correlation function above. 
+There are two ways we can use this function when we have two variables (independent or paired). The first is to type our x and y variables in as we did in the correlation function above.
 ```{r}
-
+t.test(personalityDat$oppenness, personalityDat$agreeableness, var.equal=TRUE)
 ```
+You'll notice that the top of the t-test output says "Welch's Two sample t-test." This R function automatically assumes that the variances of each group are unequal. If we wanted to run a traditional paired-samples t-test, we need to include another argument.
+
 OR
 we can type them in as a formula in R. Formulas typically take the form y ~ x. To show you this example, I need to reformat our wide data to long data (using what we did last week!)
 
 ```{r}
-"Make data long format"
+"t.test(dependent variable ~ indepedent variable, data= dataframe"
+#adding condition column
+personalityDat$condition<-NA
+personalityDat$condition<- rep(c("public", "private"), nrow(personalityDat)/2)
+colnames(personalityDat) #to check if column exists
+tail(personalityDat) #to check bottom of dataset
+summary(as.factor(personalityDat$condition))
 ```
-This changes the t test arguments to: 
+This changes the t test arguments to:
 t.test(formula, data)
 y~x
 ```{r}
-
-```
-If we think about the structure of our data, our data seem to be from a repeated measure. It's okay if you didn't infer that, it's my data and I made them to be this way. This is why including readme files for your data (whether it's publicly available or you're sharing it with collaborators) is really important! 
-
-To account for the lack of dependence between observations, we'll run a paired samples t test. The code looks pretty similar to above, but we'll use an additional argument. 
-```{r}
-
+t.test(agreeableness~condition, data=personalityDat, var.equal=TRUE)
+"not this"
+t.test(personalityDat$agreeableness, personalityDat$condition, var.equal=TRUE)
 ```
 
-You'll notice that the top of the t-test output says "Welch's Two sample t-test." This R function automatically assumes that the variances of each group are unequal. If we wanted to run a traditional paired-samples t-test, we need to include another argument. 
+If our data were dependent between observations, we'll run a paired samples t test. The code looks pretty similar to above, but we'll use an additional argument.
 ```{r}
-
+t.test(personalityDat$agreeableness, personalityDat$extraversion, paired=TRUE)
 ```
 
-Finally, we some times run one tailed vs two tailed tests, just like we did with the correlations. 
+Finally, we some times run one tailed vs two tailed tests, just like we did with the correlations.
 ```{r}
-
-```
-Differences between Greater and Less:
-```{r}
-
+t.test(personalityDat$agreeableness, personalityDat$extraversion, paired=TRUE, alternative="greater")
+t.test(personalityDat$agreeableness, personalityDat$extraversion, paired=TRUE, alternative="less")
 ```
 
 ##### Correlation and T-test practice
 1. Open the mtcars dataset. Find the correlation between mpg and hp
 ```{r}
-
+data(mtcars)
+cor(mtcars$mpg, mtcars$hp)
 ```
 
-2. Conduct a significance test to determine if displacement and miles per gallon significantly correlated. 
+2. Conduct a significance test to determine if displacement and miles per gallon significantly correlated.
 ```{r}
-
+cor.test(mtcars$mpg, mtcars$disp)
 ```
-
-3. Conduct a two-tailed t-test examining whether the average mpg differs by transmission (am). 
+#yes
+3. Conduct a two-tailed t-test examining whether the average mpg differs by transmission (am).
 ```{r}
-
+t.test(mpg~am, data=mtcars, var.equal=TRUE)
 ```
-
-4. Conduct a one-tailed t-test examining whether the average displacement(disp) differs  engine shape (vs). Specifically, test whether straight engines result in higher displacements.
+#yes
+4. Conduct a one-tailed t-test examining whether the average displacement(disp) differs engine shape (vs). Specifically, test whether straight engines result in higher displacements.
 ```{r}
+mtcars$vs2<- as.factor(mtcars$vs)
+mtcars$vs2<- relevel(mtcars$vs2,ref="1")
+mtcars$vs3<- mtcars$vs2
+levels(mtcars$vs3)<- c("straight", "vshaped")
+t.test(disp~vs2, data=mtcars, var.equal=TRUE, alternative= "greater")
+t.test(disp~vs3, data=mtcars, var.equal=TRUE, alternative= "greater")
 
+t.test(disp~vs, data= mtcars,alternative = "less",var.equal=TRUE)
 ```
 
-### Extra Code about Correlation Tables 
-cor() can also be used to create correlation matrices, but need to create a dataframe that is just the variables you'd like to use. 
-cor(dat)
-we'll do a quick example w/ mt cars
-```{r}
-
-```
 
 #### regression
 Back to the simulated Dataset we made. The code for a linear regression is really similar (ie identical)  to what we used for t-tests.
 lm(DV ~ IV, data)
 ```{r}
-
+lm(extraversion ~ condition, data=personalityDat)
+lm1<- lm(extraversion~ condition, data=personalityDat)
 ```
 I tend to save my linear models because it allows me to do a few useful things:
 Just like we used summary to get a summary of our data, we can use the same function to learn more about our models
 ```{r}
-
+summary(lm1)
 ```
 str() is a function that allows us to learn about the structure of our model. We can use this to get specific pieces of information, or additional information that "underlies" our model (eg residuals and fitted values)
 ```{r}
+str(lm1)
+lm1$coefficients
+lm1$coefficients[1]# linear regression
+lm1$residuals #error for individual data point
+lm1$fitted.values #predicted values
+library(ggplot2)
+ggplot(,aes(lm1$fitted.values,lm1$residuals ))+ geom_point()
 ```
 
 **Multiple Regression**
-We can include additional factors and interaction terms to our models: 
+We can include additional factors and interaction terms to our models:
 
 ```{r}
-
+lm2<- lm(agreeableness~ condition + extraversion, data=personalityDat)
+summary(lm2)
 ```
 The : can be used instead of + to include an interaction in your model
 ```{r}
-
+lm3<- lm(agreeableness~ condition * extraversion, data=personalityDat)
+summary(lm3)
 ```
-
-
-Using * instead of + will include both the individual predictors AND their interactions 
+Using * instead of + will include both the individual predictors AND their interactions
 ```{r}
-
+lm(agreeableness~ condition + extraversion + condition *extraversion, data=personalityDat)
 ```
 
-The class of our data and the way data are entered matter for regression models. 
+The class of our data and the way data are entered matter for regression models.
 let's consider condition:
-```{r}
-
-```
 
 Data don't really look continuous. We can change age to a factor. This will influence our output.  
 
-We may also need to change the reference level for factors. For instance, in this case, we care about how age relates to children's evaluations of excluders. 
+We may also need to change the reference level for factors. For instance, in this case, we care about how age relates to children's evaluations of excluders.
 relevel(dat$age, ref="x")
 ```{r}
-
+#this depends on your study!
 ```
 
 **Anova**
-There are several ways you can get Anova results in R. There are differences in the ways that they handle interactions, but they are used in the same way. 
+There are several ways you can get Anova results in R. There are differences in the ways that they handle interactions, but they are used in the same way.
 ```{r}
-
+a1<-aov(agreeableness~condition, data=personalityDat)
+summary(a1)
+#aov()
+#Anova()
+#anova()
 ```
-I typically use Anova from the car package, but there are some exceptions. We can talk about them as they come up. 
+I typically use Anova from the car package, but there are some exceptions. We can talk about them as they come up.
 
 ####Regression and ANOVA practice
 1. Use the mtcars dataset and create a linear model that predicts mpg from cylinder (cyl) and displacement. Print the results
@@ -277,20 +316,20 @@ I typically use Anova from the car package, but there are some exceptions. We ca
 
 ```
 
-2. Create the same model, but include an interaction term. 
+2. Create the same model, but include an interaction term.
 ```{r}
 
 ```
 
-3. Run an ANOVA predicting hp from the transmission variable. 
+3. Run an ANOVA predicting hp from the transmission variable.
 ```{r}
 
 ```
 ###Learning Outcome 3: Nonparametric analyses in R
-Nonparametric analyses are run similarly to their parametric versions. In the interest of time, we'll talk about biserial correlations, spearman correlations, Wilcoxon sign rank tests, and binomial tests. 
+Nonparametric analyses are run similarly to their parametric versions. In the interest of time, we'll talk about biserial correlations, spearman correlations, Wilcoxon sign rank tests, and binomial tests.
 
 **biserial correlations**
-Biserial correlations involve a binary outcome and a continuous variable. To run one in R, we need the ltm package. 
+Biserial correlations involve a binary outcome and a continuous variable. To run one in R, we need the ltm package.
 ```{r}
 
 ```
@@ -298,36 +337,36 @@ the function is biserial.cor(continuous, binary)
 ```{r}
 
 ```
-Mathematically, this is the same as the pearson's version. 
+Mathematically, this is the same as the pearson's version.
 ```{r}
 
 ```
 
 **spearman's rho**
-We can calculate spearman's rho and kendall's tau the same way. We just need to use the "method" argument for cor.test 
+We can calculate spearman's rho and kendall's tau the same way. We just need to use the "method" argument for cor.test
 ```{r}
 
 ```
 
 **Wilcoxon sign rank test**
-This is the nonparametric version of the t-test. It has the same arguments. We'll do one as an example. 
+This is the nonparametric version of the t-test. It has the same arguments. We'll do one as an example.
 wilcox.test
 ```{r}
 
 ```
 
 **binomial tests**
-We use binomial tests to determine if something happens more often than chance. The function is binom.test and it has the following arguments: 
+We use binomial tests to determine if something happens more often than chance. The function is binom.test and it has the following arguments:
 binom.test(successes, totalScores, probability)
 ```{r}
 
 ```
 
-for instance, if we have 10 true/false statements, and get 6 right. Does this differ from chance? 
+for instance, if we have 10 true/false statements, and get 6 right. Does this differ from chance?
 ```{r}
 
 ```
-This is a two-tailed test, but can also do one tailed by specifying the alternative. 
+This is a two-tailed test, but can also do one tailed by specifying the alternative.
 
 20 questions, 5 choices, and want to know probability of getting 14
 ```{r}
@@ -335,9 +374,12 @@ This is a two-tailed test, but can also do one tailed by specifying the alternat
 ```
 
 
-####Learning Outcome 3 practice: 
-1. using the mtcars dataset, run a correlation to determine the relationship between engine shape (vs) and hp. What test did you run and why? 
+#### Learning Outcome 3 practice:
+1. using the mtcars dataset, run a correlation to determine the relationship between engine shape (vs) and hp. What test did you run and why?
 
-2. Run a wilcoxon sign rank test to determine if cylinder and gears have different means. 
+
+
+2. Run a wilcoxon sign rank test to determine if cylinder and gears have different means.
+
 
 3. Run a binomial test to determine if the number of cars with manual transmission differs from chance. (hint: use the ? feature to learn more about the dataset.)
