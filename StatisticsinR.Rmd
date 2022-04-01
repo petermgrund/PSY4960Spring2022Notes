@@ -99,16 +99,20 @@ ggplot(personality_data, aes(open_z)) + geom_histogram(bins = 100)
 ##### Learning Outcome 1 Practice
 1) calculate the mean, median, and mode for [xx] 
 ```{r}
-
+mean(personality_data$neuroticism)
 ```
 2) what do you notice about these scores? (are they the same? different?)
 
 3) create z scores for [xx]. Interpret what participant 3's z score means. 
 ```{r}
-
 ```
 
 *Challenge* Graph your data and include the mean median and mode on the graph 
+
+```{r}
+ggplot(personality_data, aes(agreeableness)) + geom_histogram() + 
+geom_vline(xintercept=mean(), size=2, color="color")
+```
 
 ### Learning Outcome 2: Conduct common parametric analyses in R
 
@@ -118,15 +122,22 @@ Now that we have covered some descriptive statistics, we'll talk about parametri
 We'll practice running correlations using the dataset above. To do this, we'll look at the correlation between Evaluations for includers and excluders in the dataset. 
 cor(x, y)
 ```{r}
-
+co <- personality_data$conscientiousness
+ag <- personality_data$agreeableness
+y <-
+cor(co, ag)
 ```
 **Note:** It's great that we can see the correlation between these two measures, but we don't have any additional information, ie information related to significance.We can use another function, cor.test, to get information about significance.
 cor.test(x,y)
 ```{r}
-
+cor.test(co, ag)
 ```
 We can change whether we our conducting a one tailed or a two tailed test by including an additional argument "alternative." It defaults to a two tailed test, but we can specify a one tailed test in either direction (greater or less) 
 ```{r}
+cor.test(co, ag, alternative = "less") #is a negative corr significant
+cor.test(co, ag, alternative = "greater") #is a positive corr significant
+
+cor(personality_data[,2:6])
 
 ```
 
@@ -137,7 +148,7 @@ We can run a variety of t-tests using the same function t.test().
 A one sample t test can be computed by specifying mu in the arguments. 
 t.test(variable, mu)
 ```{r}
-
+t.test(personality_data$agreeableness, mu = 50)
 ```
 
 ##### two samples t-test
