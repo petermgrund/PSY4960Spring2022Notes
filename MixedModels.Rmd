@@ -1,0 +1,71 @@
+---
+title: "Mixed Models"
+author: "Amanda Mae Woodward"
+date: "4/5/2022"
+output: html_document
+---
+Linear Mixed Models are going to be our first "advanced" R programming topic. For these, the idea is to introduce you to a more advanced statistical technique than what you've covered in PSY3801. 
+
+**So what are mixed models?**
+Linear Mixed models can go by a couple of other names, but generally refer to a statistical technique we can use when we have longitudinal, hierarchical, or non independent data. (we'll talk about what each of these words means from a statistical sense to make sure that we're all on the same page.)
+
+Linear mixed models allow us to account for two types of effects: Fixed Effects and Random effects. There are a couple of ways people talk about these, but what we'll use are the following definitions: 
+fixed effect- constant across individuals
+random effect- vary across individuals 
+
+To create a mixed model, we'll use the lme4 package: 
+```{r}
+library(lme4)
+```
+
+The exact function we'll use is lmer() and works similarly to lm() 
+
+lmer(DV ~ fixed effect+(specified random effect), data= dat)
+
+
+in this case, fixed effects are entered the **same** way they are entered into a linear regression 
+
+When specifying the random components, we typically see a set up like this 
+(something|something else). 
+
+For now, we're really going to focus on some simple ways of setting up a linear mixed model, and we're glossing over some stuff (like whether we should be using a **generalized linear mixed model**). If you have questions for your specific project, please let me know. 
+
+To specify (something| something else), we are going to look at a couple of examples: 
+
+(1|subject)- specifies that we'll have a random intercept for each participant. 
+
+To illustrate this, I will graph our ChickWeight data
+```{r}
+data(ChickWeight)
+ggplot(ChickWeight, aes(Time, weight))+geom_point()+ geom_smooth(method="lm")+facet_wrap(~Chick)
+```
+```{r}
+library(lmerTest)
+lme1<-lmerTest::lmer(weight~Time+ (1|Chick), data=ChickWeight)
+summary(lme1)
+
+```
+We can compare this to the output of a regular regression. 
+
+
+**Practice:** 
+1. open the sleep study dataset
+
+2. read the help file to make sure you understand what the data are
+
+3. create a graph for each participant depicting their reaction time and the number of days of deprivation
+
+4. Run a linear mixed model with a random intercept. 
+
+It is also possible to specify a random slope in a linear mixed model. 
+
+
+For instance, we could write the following: 
+
+
+**Practice** 
+1) create a model with a random slope and intercept for the sleepstudy data. 
+
+
+
+
