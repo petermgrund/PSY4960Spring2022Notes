@@ -4,6 +4,43 @@ author: "Amanda Mae Woodward"
 date: "4/5/2022"
 output: html_document
 ---
+
+# Learning Outcomes:
+Our learning outcomes for today are:
+1) troubleshoot code to make it run (Debug code)
+2) Compute a Logistic Regression
+3) Compute linear mixed models
+
+# Learning Outcome 1: Trouble Shooting Code:
+Look at the code below and determine what the errors are: 
+
+```{r}
+ggplot(carat, aes(diamongs, price)+geom_bar() 
+
+mean(carat)
+
+lm(color~ price)
+```
+# Pre learning outcome 2: Checking in about interpretations
+Where are we? What questions do you have about R output? 
+
+# Learning Outcome 2: Logistic Regression
+Logistic regression is similar to linear regression, except the outcome variable is dichotomous (two options). To run a linear regression, we need some data. Let's use mtcars: 
+```{r}
+
+```
+The way to run a logistic regression is to use the function glm(). glm stands for "Generalized Linear Model," and this function can be used for other types of regression. The syntax is similar to what we use in linear regression:
+glm(DV~IV, data=, family="binomial") 
+```{r}
+
+```
+
+Practice: 
+1) create a logistic regression predicting engine shape from mpg. 
+```{r}
+
+```
+# Learning Outcome 3: Mixed Models
 Linear Mixed Models are going to be our first "advanced" R programming topic. For these, the idea is to introduce you to a more advanced statistical technique than what you've covered in PSY3801. 
 
 **So what are mixed models?**
