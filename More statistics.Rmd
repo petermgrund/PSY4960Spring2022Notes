@@ -80,6 +80,7 @@ random effect- vary across individuals
 To create a mixed model, we'll use the lme4 package: 
 ```{r}
 library(lme4)
+#install.packages("lme4")
 ```
 
 The exact function we'll use is lmer() and works similarly to lm() 
@@ -101,34 +102,51 @@ To specify (something| something else), we are going to look at a couple of exam
 To illustrate this, I will graph our ChickWeight data
 ```{r}
 data(ChickWeight)
+library(ggplot2)
 ggplot(ChickWeight, aes(Time, weight))+geom_point()+ geom_smooth(method="lm")+facet_wrap(~Chick)
+
 ```
 ```{r}
+lmer(weight~ Time + (1|Chick), data=ChickWeight)
+
 library(lmerTest)
 lme1<-lmerTest::lmer(weight~Time+ (1|Chick), data=ChickWeight)
 summary(lme1)
 
+summary(lm(weight~Time +Diet, data=ChickWeight))
 ```
-We can compare this to the output of a regular regression. 
-
-
 **Practice:** 
 1. open the sleep study dataset
+```{r}
+data(sleepstudy)
+```
 
 2. read the help file to make sure you understand what the data are
+```{r}
+?sleepstudy
+```
 
 3. create a graph for each participant depicting their reaction time and the number of days of deprivation
+```{r}
+ggplot(sleepstudy, aes(Days, Reaction))+geom_point()+geom_smooth(method="lm") + facet_wrap(~Subject) 
+```
 
 4. Run a linear mixed model with a random intercept. 
+```{r}
+lme3<-lmerTest::lmer(Reaction~Days+(1|Subject), data=sleepstudy)
+summary(lme3)
+```
 
 It is also possible to specify a random slope in a linear mixed model. 
-
-
-For instance, we could write the following: 
-
-
+```{r}
+randomSlope<-lmerTest::lmer(weight ~Time + (Diet|Chick), data=ChickWeight)
+summary(randomSlope)
+```
 **Practice** 
 1) create a model with a random slope and intercept for the sleepstudy data. 
+```{r}
+lmer(Reaction ~ Days + (Days|Subject), data=sleepstudy)
+```
 
 
 
