@@ -1,0 +1,83 @@
+---
+title: "Adv. Data Cleaning"
+author: "Amanda Mae Woodward"
+date: "4/7/2022"
+output: html_document
+---
+
+```{r loadData}
+library(tidyverse)
+data(billboard)
+View(billboard)
+```
+
+# Things to do to clean data (make it make sense)
+
+- missing values- a lot... 
+- remove NA, long format
+
+```{r checkMissing}
+summary(is.na(billboard)==TRUE)  #early columns no missing; late columns missing everything
+```
+
+```{r removingMissing}
+#na.omit- remove rows with missing data 
+billboard2<- na.omit(billboard) #bad idea, gets rid of all of our data
+```
+
+Use long format
+```{r tolongFormat}
+# cols= are the things we want to be in long format; everything else is ID variable
+billboardLong<- billboard %>% pivot_longer(cols=wk1:wk76, names_to= "week", values_to= "position") #this is hard coded names; means same columns will be used regardless of cleaning
+
+billboardL3<- billboard %>% pivot_longer(cols= c(colnames(billboard)[4:79]), names_to= "week", values_to= "position", values_drop_na = TRUE) #soft code
+```
+
+```{r}
+billboardLong2<- na.omit(billboardLong)
+```
+
+- add a column for length of time on top 100 (song and artist)
+steps to do this: 
+- add a column 
+- calculate length of time 
+- in wide data: count the number of columns (in long data this will be #of rows)
+How can we do this? 
+- count function 
+```{r}
+artistList<-billboardLong %>% group_by(artist, track) %>% tally()
+artistList
+#why are things popping up 76 times? 
+summary(as.factor(artistList$n)) #that's not right. figure out later
+#fix 
+RealartistList<-billboardL3 %>% group_by(artist, track) %>% tally()
+RealartistList
+```
+
+```{r addtoData}
+left_join(billboard, RealartistList)#this will combine data sets of the same length
+
+longDat4<-(left_join(billboardL3, RealartistList)) # this works to join datasets that are different sizes. When using with own data, double check that this works 
+
+#change column name of n
+colnames(longDat4)[6]<- "chartFreq"
+
+#names(longDat4)[names(longDat4) == 'n'] <- 'chartfreq' or this
+```
+
+- multiple songs; may want to know about artist (artist level info)
+- use same logic as above
+
+- splitting by year  
+date entered column has year, month, day
+```{r}
+#separate into year, month, day columns
+newDate<-billboard %>%  separate(col= date.entered, into= c("year", "month", "day"), sep= "-")
+```
+
+```{r}
+sortedDat<- newDate %>% arrange(year)
+```
+
+- sort by/arrange by frequency of time on list artist 
+- whether or not song entered billboard top 100 on birthday 
